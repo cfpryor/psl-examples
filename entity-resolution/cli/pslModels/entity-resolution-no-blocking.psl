@@ -10,8 +10,6 @@
 // If two papers have a common set of authors and the same number of tokens in the title, then this implies the same paper
 2.0: SameAuthorSet(P1, P2) & PaperTitle(P1, T1) & PaperTitle(P2, T2) & SameNumTokens(T1, T2) >> SamePaper(P1, P2) ^2
 
-5.0: SameAuthor(A1, A2) & SameAuthor(A2, A3) & A1 != A3 & A1 != A2 & A2 != A3 >> SameAuthor(A1, A3) ^2
-
 // Priors: By default, Authors are not the same Authors and Papers are not the same Papers
 2.0: !SameAuthor(A1, A2) ^2
 2.0: !SamePaper(A1, A2) ^2

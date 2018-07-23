@@ -1,5 +1,6 @@
 predicates:
    AuthorName/2: closed
+   AuthorBlock/2: closed
    PaperTitle/2: closed
    AuthorOf/2: closed
    SimName/2: closed
@@ -12,6 +13,7 @@ predicates:
 
 observations:
    AuthorName: ../data/entity-resolution/eval/authorName_obs.txt
+   AuthorBlock: ../data/entity-resolution/eval/authorBlock_obs.txt
    PaperTitle: ../data/entity-resolution/eval/paperTitle_obs.txt
    AuthorOf: ../data/entity-resolution/eval/authorOf_obs.txt
    SimName: ../data/entity-resolution/eval/simName_obs.txt
