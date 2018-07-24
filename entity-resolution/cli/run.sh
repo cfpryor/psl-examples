@@ -5,15 +5,17 @@ readonly JAR_PATH="./psl-cli-${PSL_VERSION}.jar"
 readonly FETCH_DATA_SCRIPT='../data/fetchData.sh'
 readonly BASE_NAME='entity-resolution'
 
-readonly ADDITIONAL_PSL_OPTIONS='-D log4j.threshold=TRACE --postgres'
+# readonly ADDITIONAL_JAVA_OPTIONS='-Xms100G -Xmx100G'
+readonly ADDITIONAL_JAVA_OPTIONS=''
+readonly ADDITIONAL_PSL_OPTIONS='-D log4j.threshold=TRACE --postgres psl'
 readonly ADDITIONAL_LEARN_OPTIONS='--learn'
-readonly ADDITIONAL_EVAL_OPTIONS='--infer --eval org.linqs.psl.evaluation.statistics.DiscreteEvaluator'
+readonly ADDITIONAL_EVAL_OPTIONS='--infer --eval org.linqs.psl.evaluation.statistics.DiscreteEvaluator -D discreteevaluator.threshold=0.35'
 
 function main() {
    trap exit SIGINT
 
    # Get the data
-   getData
+   # getData
 
    # Make sure we can run PSL.
    check_requirements
@@ -21,7 +23,6 @@ function main() {
 
    # Run PSL
    # runWeightLearning
-
    runEvaluation
 }
 
@@ -37,7 +38,7 @@ function getData() {
 function runWeightLearning() {
    echo "Running PSL Weight Learning"
 
-   java -Xms100G -Xmx100G -jar "${JAR_PATH}" --model "${BASE_NAME}.psl" --data "${BASE_NAME}-learn.data" ${ADDITIONAL_LEARN_OPTIONS} ${ADDITIONAL_PSL_OPTIONS}
+   java ${ADDITIONAL_JAVA_OPTIONS} -jar "${JAR_PATH}" --model "${BASE_NAME}.psl" --data "${BASE_NAME}-learn.data" ${ADDITIONAL_LEARN_OPTIONS} ${ADDITIONAL_PSL_OPTIONS}
    if [[ "$?" -ne 0 ]]; then
       echo 'ERROR: Failed to run weight learning'
       exit 60
@@ -47,7 +48,7 @@ function runWeightLearning() {
 function runEvaluation() {
    echo "Running PSL Inference"
 
-   java -Xms100G -Xmx100G -jar "${JAR_PATH}" --model "${BASE_NAME}-learned.psl" --data "${BASE_NAME}-eval.data" --output inferred-predicates ${ADDITIONAL_EVAL_OPTIONS} ${ADDITIONAL_PSL_OPTIONS}
+   java ${ADDITIONAL_JAVA_OPTIONS} -jar "${JAR_PATH}" --model "${BASE_NAME}-learned.psl" --data "${BASE_NAME}-eval.data" --output inferred-predicates ${ADDITIONAL_EVAL_OPTIONS} ${ADDITIONAL_PSL_OPTIONS}
    if [[ "$?" -ne 0 ]]; then
       echo 'ERROR: Failed to run infernce'
       exit 70
